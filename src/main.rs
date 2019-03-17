@@ -1,4 +1,4 @@
-mod vector;
+use vec3;
 use std::io::{self, Write};
 
 fn main() -> io::Result<()> {
@@ -9,9 +9,9 @@ fn main() -> io::Result<()> {
     io::stdout().write(head.as_bytes())?;
     for y in (0..ny).rev() {
         for x in 0..nx {
-            let col: Vec = Vec::new(x as f64 / nx as f64, 
-                                    y as f64 / ny as f64,
-                                    0.2);
+            let col = Vec3::new(x as f64 / nx as f64, 
+                               y as f64 / ny as f64,
+                               0.2);
             let ir: i32 = (255.9 * col[0]) as i32;
             let ig: i32 = (255.9 * col[1]) as i32;
             let ib: i32 = (255.9 * col[2]) as i32;
