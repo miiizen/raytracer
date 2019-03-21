@@ -19,6 +19,16 @@ impl ops::Add for Vec3 {
     }
 }
 
+impl ops::AddAssign for Vec3 {
+    fn add_assign(&mut self, rhs: Vec3) {
+        *self = Vec3 {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+            z: self.z + rhs.z,
+        };
+    }
+}
+
 impl ops::Sub for Vec3 {
     type Output = Self;
 
@@ -53,6 +63,16 @@ impl ops::Div<f64> for Vec3 {
             y: self.y / rhs,
             z: self.z / rhs,
         }
+    }
+}
+
+impl ops::DivAssign<f64> for Vec3 {
+    fn div_assign(&mut self, rhs: f64) {
+        *self = Vec3 {
+            x: self.x / rhs,
+            y: self.y / rhs,
+            z: self.z / rhs,
+        };
     }
 }
 
@@ -94,23 +114,23 @@ impl ops::IndexMut<usize> for Vec3 {
 }
 
 impl Vec3 {
-    pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
         Vec3 { x, y, z }
     }
 
-    fn length(&self) -> f64 {
+    pub fn length(&self) -> f64 {
         (self.x*self.x + self.y*self.y + self.z*self.z).sqrt()
     }
 
-    fn squared_length(&self) -> f64 {
+    pub fn squared_length(&self) -> f64 {
         (self.x*self.x + self.y*self.y + self.z*self.z)
     }
 
-    fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
+    pub fn dot(lhs: Vec3, rhs: Vec3) -> f64 {
        lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z
     }
 
-    fn cross(lhs: Vec3, rhs: Vec3) -> Vec3 {
+    pub fn cross(lhs: Vec3, rhs: Vec3) -> Self {
         Vec3 {
             x: lhs.y*rhs.z-lhs.z*rhs.y,
             y: lhs.z*rhs.x-lhs.x*rhs.z,
@@ -119,7 +139,7 @@ impl Vec3 {
 
     }
 
-    fn unit_vector(&self) -> Self {
+    pub fn unit_vector(&self) -> Self {
         let length = self.length();
         Vec3 {
             x: self.x / length, 
@@ -128,5 +148,3 @@ impl Vec3 {
         }
     }
 }
-
-
