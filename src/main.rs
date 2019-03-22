@@ -9,12 +9,22 @@ use std::io::{self, Write};
 
 use rand::Rng;
 
+fn random_in_unit_sphere() -> Vec3 {
+    let mut rng = rand::thread_rng();
+    let mut p: Vec3 = Vec3::new(rng.gen_range(0.0, 1.0), rng.gen_range(0.0, 1.0), rng.gen_range(0.0, 1.0))*2.0 - Vec3::new(1.0, 1.0, 1.0);
+    while p.squared_length() >= 1.0 {
+        p = Vec3::new(rng.gen_range(0.0, 1.0), rng.gen_range(0.0, 1.0), rng.gen_range(0.0, 1.0))*2.0 - Vec3::new(1.0, 1.0, 1.0);
+    }
+    p
+}
+
 // linear interpolation of blue to white
 // blended_value = (1-t)*start_value + t*end_value, t: 0 -> 1
 fn colour(r: &Ray, world: &HittableList) -> Vec3 {
     let mut rec: HitRecord = HitRecord::new();
-    if world.hit(r, 0.0, std::f64::MAX, &mut rec) {
-        return Vec3::new(rec.normal[0]+1.0, rec.normal[1]+1.0, rec.normal[2]+1.0)*0.5;
+    if world.hit(r, 0.001, std::f64::MAX, &mut rec) {
+        let target: Vec3 = rec.p + rec.normal + random_in_unit_sphere();
+        return colour(&Ray::new(rec.p, target - rec.p), world)*0.5;
     }
     else {
         let unit_direction = r.direction().unit_vector();
@@ -56,6 +66,7 @@ fn main() -> io::Result<()> {
             }
             // Colours
             col /= ns as f64;
+            col = Vec3::new(col[0].sqrt(), col[1].sqrt(), col[2].sqrt());
             let ir: i32 = (255.9 * col[0]) as i32;
             let ig: i32 = (255.9 * col[1]) as i32;
             let ib: i32 = (255.9 * col[2]) as i32;
